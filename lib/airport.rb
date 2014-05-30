@@ -19,17 +19,20 @@ class Airport
 		@capacity = capacity
 	end
 
-	def receives(plane)
-		raise RuntimeError if full?
-		@planes << plane
+	def checks_for_landing(plane)
 		if !bad_weather?
 			plane.landed!
+			raise RuntimeError if full?
+			@planes << plane
+		else plane.flying!
 		end
 	end
 
-	def releases(plane)
+	def checks_for_takeoff(plane)
 		if !bad_weather?
 			plane.flying!
+			@planes.delete(plane)
+		else plane.landed!
 		end
 	end
 

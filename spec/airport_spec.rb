@@ -1,12 +1,7 @@
 require 'airport'
 require 'plane'
  
-# A plane currently in the airport can be requested to take off.
-#
-# No more planes can be added to the airport, if it's full.
-# It is up to you how many planes can land in the airport and how that is impermented.
-#
-# If the airport is full then no planes can land
+
 describe Airport do
 
     let(:airport) { Airport.new }
@@ -16,23 +11,26 @@ describe Airport do
         airport.set_capacity(20)
         20.times do
             allow(airport).to receive(:random_weather) {'sunny'}
-            airport.receives(plane)
+            airport.checks_for_landing(plane)
         end
+    end
+
+    def flying_planes
+        plane_a, plane_b, plane_c, plane_d, plane_e, plane_f = Plane.new.flying!, Plane.new.flying!, Plane.new.flying!, Plane.new.flying!, Plane.new.flying!, Plane.new.flying!
     end
   
     context 'taking off and landing' do
 
         it 'a plane can land' do
             allow(airport).to receive(:random_weather) {'sunny'}
-            airport.receives(plane)
+            airport.checks_for_landing(plane)
             expect(airport.plane_status_check(plane)).to eq 'landed'
 
         end
     
         it 'a plane can take off' do
             allow(airport).to receive(:random_weather) {'sunny'}
-            airport.receives(plane)
-            airport.releases(plane)
+            airport.checks_for_takeoff(plane)
             expect(airport.plane_status_check(plane)).to eq 'flying'
         end
     end
@@ -41,7 +39,7 @@ describe Airport do
 
         it 'a plane cannot land if the airport is full' do
             fill(airport)
-            expect{airport.receives(plane)}.to raise_error(RuntimeError)
+            expect{airport.checks_for_landing(plane)}.to raise_error(RuntimeError)
         end
     
     # Include a weather condition using a module.
@@ -53,16 +51,14 @@ describe Airport do
     # the plane can not land, and must not be in the airport
         context 'weather conditions' do
             it 'a plane cannot take off when there is a storm brewing' do
-                allow(airport).to receive(:random_weather) {'sunny'}
-                airport.receives(plane)
                 allow(airport).to receive(:random_weather) {'stormy'}
-                airport.releases(plane)
+                airport.checks_for_takeoff(plane)
                 expect(airport.plane_status_check(plane)).to eq 'landed'
             end
   
             it 'a plane cannot land in the middle of a storm' do
                 allow(airport).to receive(:random_weather) {'stormy'}
-                airport.receives(plane)
+                airport.checks_for_landing(plane)
                 expect(airport.plane_status_check(plane)).to eq 'flying'
             end
         end
@@ -75,46 +71,55 @@ describe Airport do
 # # Once all the planes are in the air again, check that they have the status of flying!
     describe "The grand finale (last spec)" do
 
-        it 'all planes can land and all planes can take off' do
+        context 'all planes can land and all planes can take off' do
 
-            plane_a, plane_b, plane_c, plane_d, plane_e, plane_f = Plane.new.flying!, Plane.new.flying!, Plane.new.flying!, Plane.new.flying!, Plane.new.flying!, Plane.new.flying!
-            allow(airport).to receive(:random_weather) {'sunny'}
-            airport.receives(plane_a)
-            allow(airport).to receive(:random_weather) {'sunny'}
-            airport.receives(plane_b)
-            allow(airport).to receive(:random_weather) {'sunny'}
-            airport.receives(plane_c)
-            allow(airport).to receive(:random_weather) {'sunny'}
-            airport.receives(plane_d)
-            allow(airport).to receive(:random_weather) {'sunny'}
-            airport.receives(plane_e)
-            allow(airport).to receive(:random_weather) {'sunny'}
-            airport.receives(plane_f)
-            expect(airport.plane_count).to eq 6
-            expect(airport.plane_status_check(plane_a)).to eq "landed"
-            expect(airport.plane_status_check(plane_b)).to eq "landed"
-            expect(airport.plane_status_check(plane_c)).to eq "landed"
-            expect(airport.plane_status_check(plane_d)).to eq "landed"
-            expect(airport.plane_status_check(plane_e)).to eq "landed"
-            expect(airport.plane_status_check(plane_f)).to eq "landed"
-            allow(airport).to receive(:random_weather) {'sunny'}
-            airport.releases(plane_a)
-            allow(airport).to receive(:random_weather) {'sunny'}
-            airport.releases(plane_b)
-            allow(airport).to receive(:random_weather) {'sunny'}
-            airport.releases(plane_c)
-            allow(airport).to receive(:random_weather) {'sunny'}
-            airport.releases(plane_d)
-            allow(airport).to receive(:random_weather) {'sunny'}
-            airport.releases(plane_e)
-            allow(airport).to receive(:random_weather) {'sunny'}
-            airport.releases(plane_f)
-            expect(airport.plane_status_check(plane_a)).to eq "flying"
-            expect(airport.plane_status_check(plane_b)).to eq "flying"
-            expect(airport.plane_status_check(plane_c)).to eq "flying"
-            expect(airport.plane_status_check(plane_d)).to eq "flying"
-            expect(airport.plane_status_check(plane_e)).to eq "flying"
-            expect(airport.plane_status_check(plane_f)).to eq "flying"
+            it 'all planes can land' do
+
+                plane_a, plane_b, plane_c, plane_d, plane_e, plane_f = Plane.new.flying!, Plane.new.flying!, Plane.new.flying!, Plane.new.flying!, Plane.new.flying!, Plane.new.flying!
+                allow(airport).to receive(:random_weather) {'sunny'}
+                airport.checks_for_landing(plane_a)
+                allow(airport).to receive(:random_weather) {'sunny'}
+                airport.checks_for_landing(plane_b)
+                allow(airport).to receive(:random_weather) {'sunny'}
+                airport.checks_for_landing(plane_c)
+                allow(airport).to receive(:random_weather) {'sunny'}
+                airport.checks_for_landing(plane_d)
+                allow(airport).to receive(:random_weather) {'sunny'}
+                airport.checks_for_landing(plane_e)
+                allow(airport).to receive(:random_weather) {'sunny'}
+                airport.checks_for_landing(plane_f)
+                expect(airport.plane_count).to eq 6
+                expect(airport.plane_status_check(plane_a)).to eq "landed"
+                expect(airport.plane_status_check(plane_b)).to eq "landed"
+                expect(airport.plane_status_check(plane_c)).to eq "landed"
+                expect(airport.plane_status_check(plane_d)).to eq "landed"
+                expect(airport.plane_status_check(plane_e)).to eq "landed"
+                expect(airport.plane_status_check(plane_f)).to eq "landed"
+            end
+
+                it 'all planes can take off' do
+                               
+                plane_a, plane_b, plane_c, plane_d, plane_e, plane_f = Plane.new.flying!, Plane.new.flying!, Plane.new.flying!, Plane.new.flying!, Plane.new.flying!, Plane.new.flying!
+                allow(airport).to receive(:random_weather) {'sunny'}
+                airport.checks_for_takeoff(plane_a)
+                allow(airport).to receive(:random_weather) {'sunny'}
+                airport.checks_for_takeoff(plane_b)
+                allow(airport).to receive(:random_weather) {'sunny'}
+                airport.checks_for_takeoff(plane_c)
+                allow(airport).to receive(:random_weather) {'sunny'}
+                airport.checks_for_takeoff(plane_d)
+                allow(airport).to receive(:random_weather) {'sunny'}
+                airport.checks_for_takeoff(plane_e)
+                allow(airport).to receive(:random_weather) {'sunny'}
+                airport.checks_for_takeoff(plane_f)
+                expect(airport.plane_status_check(plane_a)).to eq "flying"
+                expect(airport.plane_status_check(plane_b)).to eq "flying"
+                expect(airport.plane_status_check(plane_c)).to eq "flying"
+                expect(airport.plane_status_check(plane_d)).to eq "flying"
+                expect(airport.plane_status_check(plane_e)).to eq "flying"
+                expect(airport.plane_status_check(plane_f)).to eq "flying"
+
+            end
         end
     end
 end
