@@ -1,7 +1,7 @@
 class Plane
 
 	def initialize
-		@flying = true
+		@flying = false
 	end
 
 	def flying?
@@ -13,7 +13,7 @@ class Plane
 		self
 	end
 
-	def flying!
+	def take_off!
 		@flying = true
 		self
 	end
