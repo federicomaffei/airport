@@ -21,11 +21,16 @@ class Airport
 
 	def receives(plane)
 		raise RuntimeError if full?
-		@planes << plane if !bad_weather?
+		@planes << plane
+		if !bad_weather?
+			plane.landed!
+		end
 	end
 
 	def releases(plane)
-		@planes.delete(plane) if !bad_weather?
+		if !bad_weather?
+			plane.flying!
+		end
 	end
 
 	def full?
@@ -36,6 +41,10 @@ class Airport
 		if self.random_weather == 'stormy'
 			true
 		end
+	end
+
+	def plane_status_check(plane)
+		plane.return_state
 	end
 
 end

@@ -9,19 +9,19 @@ describe Plane do
   	end
   
   	it 'has a flying status when in the air' do
-  		plane.take_off!
+  		plane.flying!
   		expect(plane.flying?).not_to eq nil
   	end
   
   	it 'can take off' do
-  		plane.take_off!
+  		plane.flying!
   		expect(plane).to be_flying
   	end
   
   	it 'changes its status to flying after taking off' do
   		plane.landed!
   		expect(plane).not_to be_flying
-  		plane.take_off!
+  		plane.flying!
   		expect(plane).to be_flying
 	end
 
