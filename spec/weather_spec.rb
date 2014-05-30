@@ -8,7 +8,7 @@ describe Weather do
 
 	it 'can return a weather value that is sunny or stormy' do
 
-		expect(weather.conditions).to include(weather.random_setting)
+		expect(weather.conditions).to include(weather.random_weather)
 
 	end
 

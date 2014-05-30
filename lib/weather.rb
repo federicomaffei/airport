@@ -4,7 +4,7 @@ module Weather
 		@weather_conditions = ['sunny', 'stormy']
 	end
 
-	def random_setting
+	def random_weather
 		conditions.sample
 	end
 
