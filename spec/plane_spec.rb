@@ -4,25 +4,28 @@ describe Plane do
 
 	let(:plane) {Plane.new}
 
-	it 'has a flying status when created' do
-		expect(plane.flying?).not_to eq nil
-  	end
-  
-  	it 'has a flying status when in the air' do
-  		plane.flying!
-  		expect(plane.flying?).not_to eq nil
-  	end
-  
-  	it 'can take off' do
-  		plane.flying!
-  		expect(plane).to be_flying
-  	end
-  
-  	it 'changes its status to flying after taking off' do
-  		plane.landed!
-  		expect(plane).not_to be_flying
-  		plane.flying!
-  		expect(plane).to be_flying
-	end
+  context 'one plane' do
 
+    it 'is landed when created' do
+      expect(plane.flying?).to be_false
+    end
+
+    it 'can take off and be flying' do
+      plane.flying!
+      expect(plane).to be_flying
+    end
+
+    it 'changes its status when landed' do
+      plane.flying!
+      plane.landed!
+      expect(plane).not_to be_flying
+    end
+
+    it 'returns a string with its state' do
+      expect(plane.return_state).to eq 'landed'
+      plane.flying!
+      expect(plane.return_state).to eq 'flying'
+    end
+
+  end
 end
