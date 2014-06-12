@@ -11,19 +11,19 @@ describe Plane do
     end
 
     it 'can take off and be flying' do
-      plane.flying!
+      plane.fly!
       expect(plane).to be_flying
     end
 
     it 'changes its status when landed' do
-      plane.flying!
-      plane.landed!
+      plane.fly!
+      plane.land!
       expect(plane).not_to be_flying
     end
 
     it 'returns a string with its state' do
       expect(plane.return_state).to eq 'landed'
-      plane.flying!
+      plane.fly!
       expect(plane.return_state).to eq 'flying'
     end
 

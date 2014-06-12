@@ -8,32 +8,28 @@ class Airport
 
 	def initialize(options = {})
 		@capacity = options.fetch(:capacity, DEFAULT_CAPACITY)
-		@planes ||= []
+		@flying_planes ||= []
+		@landed_planes ||= []
 	end
 
 	def plane_count
-		@planes.count
+		@landed_planes.count
 	end
 
 	def set_capacity(capacity)
 		@capacity = capacity
 	end
 
-	def checks_for_landing(plane)
-		if !bad_weather?
-			plane.landed!
-			raise RuntimeError if full?
-			@planes << plane
-		else plane.flying!
-		end
+	def allows_plane_landing(plane)
+		!bad_weather? ? plane.land! : plane.fly!
+		raise RuntimeError if full?
+		@landed_planes << plane if !@landed_planes.include?(plane)
 	end
 
-	def checks_for_takeoff(plane)
-		if !bad_weather?
-			plane.flying!
-			@planes.delete(plane)
-		else plane.landed!
-		end
+	def allows_plane_takeoff(plane)
+		!bad_weather? ? plane.fly! : plane.land!
+		@landed_planes.delete(plane)
+		@flying_planes << plane
 	end
 
 	def full?
@@ -41,9 +37,7 @@ class Airport
 	end
 
 	def bad_weather?
-		if self.random_weather == 'stormy'
-			true
-		end
+		random_weather == 'stormy'
 	end
 
 	def plane_status_check(plane)
