@@ -7,7 +7,7 @@ describe Plane do
   context 'one plane' do
 
     it 'is landed when created' do
-      expect(plane.flying?).to be_false
+      expect(plane.flying?).to be_falsey
     end
 
     it 'can take off and be flying' do

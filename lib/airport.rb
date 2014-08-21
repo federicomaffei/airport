@@ -12,8 +12,12 @@ class Airport
 		@landed_planes ||= []
 	end
 
-	def plane_count
+	def landed_planes_count
 		@landed_planes.count
+	end
+
+	def flying_planes_count
+		@flying_planes.count
 	end
 
 	def set_capacity(capacity)
@@ -29,11 +33,11 @@ class Airport
 	def allows_plane_takeoff(plane)
 		!bad_weather? ? plane.fly! : plane.land!
 		@landed_planes.delete(plane)
-		@flying_planes << plane
+		@flying_planes << plane if !@flying_planes.include?(plane)
 	end
 
 	def full?
-		plane_count == @capacity
+		landed_planes_count == @capacity
 	end
 
 	def bad_weather?
